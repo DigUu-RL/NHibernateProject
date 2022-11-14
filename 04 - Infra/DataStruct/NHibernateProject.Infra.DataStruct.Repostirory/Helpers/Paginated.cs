@@ -16,14 +16,31 @@ public class Paginated<T> : List<T>
 		Total = total;
 	}
 
-	public static async Task<Paginated<T>> CreateAsync(IQueryable<T> source, int page, int quantity)
+	public static Paginated<T> CreateInstance(IEnumerable<T> source, int page, int quantity)
 	{
 		page = page == 0 ? 1 : page;
 		quantity = quantity == 0 ? 10 : quantity;
 
-		int total = await source.CountAsync();
+		int total = source.Count();
 
-		List<T> items = await source
+		List<T> items = source
+			.Skip((page - 1) * quantity)
+			.Take(quantity)
+			.ToList();
+
+		return new Paginated<T>(items, page, total, quantity);
+	}
+
+	public static async Task<Paginated<T>> CreateInstanceAsync(IEnumerable<T> source, int page, int quantity)
+	{
+		page = page == 0 ? 1 : page;
+		quantity = quantity == 0 ? 10 : quantity;
+
+		IQueryable<T> query = source.AsQueryable();
+
+		int total = await query.CountAsync();
+
+		List<T> items = await query
 			.Skip((page - 1) * quantity)
 			.Take(quantity)
 			.ToListAsync();

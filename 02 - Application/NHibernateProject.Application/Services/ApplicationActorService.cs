@@ -19,7 +19,7 @@ public class ApplicationActorService : IApplicationActorService
 
 	public async Task<ActorDTO> GetByIdAsync(long id)
 	{
-		ActorDTO data = mapper.Map<ActorDTO>(await actorService.GetById(id));
+		ActorDTO data = mapper.Map<ActorDTO>(await actorService.GetByIdAsync(id));
 		return data;
 	}
 

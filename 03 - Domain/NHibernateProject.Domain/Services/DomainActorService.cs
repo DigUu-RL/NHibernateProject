@@ -21,7 +21,7 @@ public class DomainActorService : IDomainActorService
 		this.mapper = mapper;
 	}
 
-	public async Task<ActorModel> GetById(long id)
+	public async Task<ActorModel> GetByIdAsync(long id)
 	{
 		Actor? data = await actorRepository.GetByIdAsync(id);
 

@@ -5,7 +5,7 @@ namespace NHibernateProject.Domain.Interfaces;
 
 public interface IDomainActorService
 {
-	Task<ActorModel> GetById(long id);
+	Task<ActorModel> GetByIdAsync(long id);
 	Task<PaginatedModel<ActorModel>> GetAllAsync(int page, int quantity);
 	Task CreateAsync(ActorRequest request);
 	Task UpdateAsync(ActorRequest request);

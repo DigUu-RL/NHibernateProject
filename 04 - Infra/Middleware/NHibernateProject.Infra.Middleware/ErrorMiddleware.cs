@@ -14,7 +14,7 @@ public class ErrorMiddleware
 		this.request = request;
 	}
 
-	public async Task Invoke(HttpContext context)
+	public async Task InvokeAsync(HttpContext context)
 	{
 		try
 		{
@@ -30,9 +30,9 @@ public class ErrorMiddleware
 		}
 	}
 
-	private static Task HandleExceptionAsync(HttpContext context, Exception exception, HttpStatusCode statusCode = default)
+	private static async Task HandleExceptionAsync(HttpContext context, Exception ex, HttpStatusCode statusCode = default)
 	{
-		if (exception is not GlobalException)
+		if (ex is not GlobalException)
 			statusCode = HttpStatusCode.InternalServerError;
 
 		context.Response.ContentType = "application/json";
@@ -42,9 +42,10 @@ public class ErrorMiddleware
 		{
 			statusCode,
 			statusName = statusCode.ToString(),
-			errorMessage = exception.Message
+			errorMessage = ex.Message,
+			innerException = ex.InnerException?.Message
 		});
 
-		return context.Response.WriteAsync(result);
+		await context.Response.WriteAsync(result);
 	}
 }
